@@ -1,3 +1,5 @@
+﻿using InvoiceManagement.API.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InvoiceManagement.API
 {
@@ -7,16 +9,20 @@ namespace InvoiceManagement.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            // Add services to the container
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // ✅ EF Core + SQL Server
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")));
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -26,7 +32,6 @@ namespace InvoiceManagement.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
